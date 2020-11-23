@@ -1,7 +1,5 @@
 #include "Camera.hpp"
 
-#include "Utilities/Log.hpp"
-
 Camera::Camera()
  :  m_Data(),
     m_Position(),

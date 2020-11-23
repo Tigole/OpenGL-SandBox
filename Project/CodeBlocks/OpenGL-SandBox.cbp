@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="OpenGL-SandBox" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/OpenGL-SandBox" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/OpenGL-SandBox" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Weffc++" />
+			<Add option="-Wall" />
+			<Add option="-std=c++17" />
+			<Add option="-m64" />
+			<Add option="-fexceptions" />
+			<Add option="-ftemplate-backtrace-limit=0" />
+			<Add option="-DGLM_ENABLE_EXPERIMENTAL" />
+		</Compiler>
+		<Linker>
+			<Add option="-m64" />
+			<Add library="opengl32" />
+			<Add library="glu32" />
+		</Linker>
+		<Unit filename="../../Code/Rendering/Camera.cpp" />
+		<Unit filename="../../Code/Rendering/Camera.hpp" />
+		<Unit filename="../../Code/Rendering/Material.hpp" />
+		<Unit filename="../../Code/Rendering/Mesh.hpp" />
+		<Unit filename="../../Code/Rendering/OpenGLTranslation.hpp" />
+		<Unit filename="../../Code/Rendering/Renderer.cpp" />
+		<Unit filename="../../Code/Rendering/Renderer.hpp" />
+		<Unit filename="../../Code/Rendering/Shader.cpp" />
+		<Unit filename="../../Code/Rendering/Shader.hpp" />
+		<Unit filename="../../Code/Rendering/VertexArray.cpp" />
+		<Unit filename="../../Code/Rendering/VertexArray.hpp" />
+		<Unit filename="../../Code/main.cpp" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
