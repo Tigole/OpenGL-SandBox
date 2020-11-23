@@ -368,6 +368,157 @@ private:
     }
 };
 
+class ReferenceMesh_Plane : public ReferenceMesh
+{
+public:
+    ReferenceMesh_Plane(float width, float height, int div_x, int div_y)
+    {
+        std::vector<float> l_Vertices;
+        std::vector<uint32_t> l_Indices;
+        int l_Vertice_Count = width * div_x * height * div_y;
+        float l_Step_x, l_Step_z;
+        float xx, zz;
+        int ii = 0;
+
+        l_Vertices.clear();
+        l_Indices.clear();
+
+        div_x = std::max(div_x, 2);
+        div_y = std::max(div_x, 2);
+
+        l_Vertice_Count = width * div_x * height * div_y;
+        l_Step_x = static_cast<float>(width) / static_cast<float>(div_x);
+        l_Step_z = static_cast<float>(height) / static_cast<float>(div_y);
+        xx = 0.0f;
+        zz = 0.0f;
+        while(static_cast<int>(zz) < static_cast<int>(height))
+        {
+            l_Vertices.push_back(xx);
+            l_Vertices.push_back(0.0f);
+            l_Vertices.push_back(zz); /// z
+            l_Vertices.push_back(xx); /// texCoord x
+            l_Vertices.push_back(zz); /// texCoord y
+            l_Vertices.push_back(0.0f); /// Normal x
+            l_Vertices.push_back(-1.0f); /// Normal y
+            l_Vertices.push_back(0.0f); /// Normal z
+
+            l_Indices.push_back(ii * 6 + 0);
+
+            l_Vertices.push_back(xx);
+            l_Vertices.push_back(0.0f);
+            l_Vertices.push_back(zz + l_Step_z); /// z
+            l_Vertices.push_back(xx); /// texCoord x
+            l_Vertices.push_back(zz + l_Step_z); /// texCoord y
+            l_Vertices.push_back(0.0f); /// Normal x
+            l_Vertices.push_back(-1.0f); /// Normal y
+            l_Vertices.push_back(0.0f); /// Normal z
+
+            l_Indices.push_back(ii * 6 + 1);
+
+            l_Vertices.push_back(xx + l_Step_x);
+            l_Vertices.push_back(0.0f);
+            l_Vertices.push_back(zz); /// z
+            l_Vertices.push_back(xx + l_Step_x); /// texCoord x
+            l_Vertices.push_back(zz); /// texCoord y
+            l_Vertices.push_back(0.0f); /// Normal x
+            l_Vertices.push_back(-1.0f); /// Normal y
+            l_Vertices.push_back(0.0f); /// Normal z
+
+            l_Indices.push_back(ii * 6 + 2);
+
+            l_Vertices.push_back(xx);
+            l_Vertices.push_back(0.0f);
+            l_Vertices.push_back(zz + l_Step_z); /// z
+            l_Vertices.push_back(xx); /// texCoord x
+            l_Vertices.push_back(zz + l_Step_z); /// texCoord y
+            l_Vertices.push_back(0.0f); /// Normal x
+            l_Vertices.push_back(-1.0f); /// Normal y
+            l_Vertices.push_back(0.0f); /// Normal z
+
+            l_Indices.push_back(ii * 6 + 3);
+
+            l_Vertices.push_back(xx + l_Step_x);
+            l_Vertices.push_back(0.0f);
+            l_Vertices.push_back(zz); /// z
+            l_Vertices.push_back(xx + l_Step_x); /// texCoord x
+            l_Vertices.push_back(zz); /// texCoord y
+            l_Vertices.push_back(0.0f); /// Normal x
+            l_Vertices.push_back(-1.0f); /// Normal y
+            l_Vertices.push_back(0.0f); /// Normal z
+
+            l_Indices.push_back(ii * 6 + 4);
+
+            l_Vertices.push_back(xx + l_Step_x);
+            l_Vertices.push_back(0.0f);
+            l_Vertices.push_back(zz + l_Step_z); /// z
+            l_Vertices.push_back(xx + l_Step_x); /// texCoord x
+            l_Vertices.push_back(zz + l_Step_z); /// texCoord y
+            l_Vertices.push_back(0.0f); /// Normal x
+            l_Vertices.push_back(-1.0f); /// Normal y
+            l_Vertices.push_back(0.0f); /// Normal z
+
+            l_Indices.push_back(ii * 6 + 5);
+
+            xx += l_Step_x;
+            if (static_cast<int>(xx) >= static_cast<int>(width))
+            {
+                xx = 0.0f;
+                zz += l_Step_z;
+            }
+            ii++;
+        }
+#if 0
+        l_Vertices = {
+
+            /*-0.5f, -0.5f, -0.5f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+             0.5f, -0.5f, -0.5f,    1.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+             0.5f, -0.5f,  0.5f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+             0.5f, -0.5f,  0.5f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f,    0.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,*/
+
+            -0.5f, -0.5f, -0.5f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+             0.0f, -0.5f, -0.5f,    1.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+             0.0f, -0.5f,  0.0f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+             0.0f, -0.5f,  0.0f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+            -0.5f, -0.5f,  0.0f,    0.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+
+             0.0f, -0.5f, -0.5f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+             0.5f, -0.5f, -0.5f,    1.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+             0.5f, -0.5f,  0.0f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+             0.5f, -0.5f,  0.0f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+             0.0f, -0.5f,  0.0f,    0.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+             0.0f, -0.5f, -0.5f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+
+            -0.5f, -0.5f,  0.0f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+             0.0f, -0.5f,  0.0f,    1.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+             0.0f, -0.5f,  0.5f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+             0.0f, -0.5f,  0.5f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f,    0.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+            -0.5f, -0.5f,  0.0f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+
+             0.0f, -0.5f,  0.0f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+             0.5f, -0.5f,  0.0f,    1.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+             0.5f, -0.5f,  0.5f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+             0.5f, -0.5f,  0.5f,    1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+             0.0f, -0.5f,  0.5f,    0.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+             0.0f, -0.5f,  0.0f,    0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+
+        };
+
+        l_Indices.clear();
+        for (std::size_t ii = 0; ii < l_Vertices.size() / 8; ii++)
+        {
+            l_Indices.push_back(ii);
+        }
+#endif // 0
+        mt_Load_Vertices(l_Vertices, l_Indices, VertexBufferLayout({VertexBufferLayoutElement("aPos", ShaderDataType::vec3, false),
+                                                                    VertexBufferLayoutElement("aTexCoord", ShaderDataType::vec2, false),
+                                                                    VertexBufferLayoutElement("aNormal", ShaderDataType::vec3, false)}));
+    }
+};
+
 void fn_Create_Mesh_Square(Mesh& m, float x_edge, float y_edge, float z_edge);
 void fn_Create_Mesh_Hexagon(Mesh& m, float radius);
 void fn_Create_Mesh_Pane(Mesh& m, float x_edge, float y_edge);

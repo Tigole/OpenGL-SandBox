@@ -74,13 +74,17 @@ void Renderer::mt_Initialise(sf::RenderWindow& wnd)
     else
     {}
 
-    m_Pane.reset(new ReferenceMesh_Cube(glm::vec3(0.0f), glm::vec3(1.0f)));
+    m_GUI_Screen.create(m_Wnd->getSize(), m_Wnd->getSettings());
+
     m_Instanced_Buffer.reset(new VertexBuffer(VertexBufferLayout({VertexBufferLayoutElement("aModelMatrix", ShaderDataType::mat4, false)})));
+//    m_SFML_Shader = sf::RenderStates::Default.shader
+
+    /*m_Pane.reset(new ReferenceMesh_Cube(glm::vec3(0.0f), glm::vec3(1.0f)));
 
     m_Particle_VA.reset(new VertexArray);
     m_Particle_VA->mt_Add_Vertex_Buffer(m_Pane->m_VB.get());
     m_Particle_VA->mt_Add_Vertex_Buffer(m_Instanced_Buffer.get());
-    m_Particle_VA->mt_Set_Index_Buffer(m_Pane->m_IB.get());
+    m_Particle_VA->mt_Set_Index_Buffer(m_Pane->m_IB.get());*/
 }
 
 Renderer& Renderer::smt_Get(void)
@@ -178,7 +182,7 @@ void Renderer::mt_End_Draw(void)
 
 
     /// Material
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     for (auto l_it = m_Mesh_Material_Render_Buffer.begin(); l_it != m_Mesh_Material_Render_Buffer.end() && true; l_it++)
     {
         VertexArray* l_VA = l_it->first.first;
@@ -215,7 +219,7 @@ void Renderer::mt_End_Draw(void)
     }
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    sf::Shader::bind(&m_SFML_Shader);
+    sf::Shader::bind(sf::RenderStates::Default.shader);
     m_GUI_Screen.display();
     l_GUI_Sprite.setTexture(m_GUI_Screen.getTexture());
     m_Wnd->draw(l_GUI_Sprite);
@@ -254,11 +258,13 @@ void Renderer::mt_Render_Particle(const sf::RectangleShape& particle)
 
 void Renderer::mt_Draw_Drawable(const sf::Drawable& d, sf::RenderStates states)
 {
-    m_Wnd->pushGLStates();
+    /*m_Wnd->pushGLStates();
 
     m_Wnd->draw(d, states);
 
-    m_Wnd->popGLStates();
+    m_Wnd->popGLStates();*/
+
+    m_GUI_Screen.draw(d, states);
 }
 
 
