@@ -10,7 +10,7 @@
 #include <memory>
 
 #include "glm/glm.hpp"
-#include "ResourceManager/Resource.hpp"
+//#include "ResourceManager/Resource.hpp"
 #include "OpenGLTranslation.hpp"
 
 class Mesh;
