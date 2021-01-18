@@ -8,8 +8,8 @@
 
 struct CameraData
 {
-    CameraData(){}
-    CameraData(float fov, const sf::Vector2u& window_size, float near, float far)
+    CameraData() {}
+    CameraData(float fov, const sf::Vector2u& window_size, float near = 1.0f, float far = 1000.0f)
      :  m_fov(fov),
         m_aspect(static_cast<float>(window_size.x) / window_size.y),
         m_frustum_near(near),

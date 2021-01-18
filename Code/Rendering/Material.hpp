@@ -26,6 +26,8 @@ public:
     std::map<std::string, glm::mat2> m_Mat2;
     std::map<std::string, glm::mat3> m_Mat3;
     std::map<std::string, glm::mat4> m_Mat4;
+
+    std::map<std::string, sf::Color> m_Color;
 };
 
 #endif // _MATERIAL_HPP

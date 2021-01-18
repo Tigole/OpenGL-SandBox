@@ -17,14 +17,8 @@ struct Mesh
 
     std::vector<float> m_Vertices;
     std::vector<uint32_t> m_Indices;
-};
 
-class ReferenceMesh : public Mesh
-{
-public:
-    virtual ~ReferenceMesh() {}
 
-protected:
     void mt_Load_Vertices(const std::vector<float> vertices, const std::vector<uint32_t> indices, const VertexBufferLayout& layout)
     {
         m_Vertices = vertices;
@@ -33,7 +27,19 @@ protected:
         m_VB.reset(new VertexBuffer(m_Vertices, layout));
         m_IB.reset(new IndexBuffer(m_Indices));
     }
+};
 
+bool fn_Load_Mesh(const std::string& file_name, Mesh& mesh);
+bool fn_Load_Mesh(const std::string& file_name, Mesh* mesh);
+bool fn_Load_Mesh(const std::string& file_name, std::map<std::string, std::unique_ptr<Mesh>>& mesh);
+
+
+class ReferenceMesh : public Mesh
+{
+public:
+    virtual ~ReferenceMesh() {}
+
+protected:
     void mt_Hard_Transform(const Transform& t, const std::vector<std::string>& elements)
     {
         const VertexBufferLayout& l_Layout = m_VB->mt_Get_Layout();
@@ -518,6 +524,7 @@ public:
                                                                     VertexBufferLayoutElement("aNormal", ShaderDataType::vec3, false)}));
     }
 };
+
 
 void fn_Create_Mesh_Square(Mesh& m, float x_edge, float y_edge, float z_edge);
 void fn_Create_Mesh_Hexagon(Mesh& m, float radius);

@@ -55,12 +55,19 @@
 			<Add directory="../../Submodules/glew/glew-2.1.0/lib/Release/x64" />
 			<Add directory="../../Submodules/glew/glew-2.1.0/bin/Release/x64" />
 		</Linker>
+		<Unit filename="../../Code/CollisionTest.cpp" />
+		<Unit filename="../../Code/CollisionTest.hpp" />
+		<Unit filename="../../Code/Map3DFromTiled.cpp" />
+		<Unit filename="../../Code/Map3DFromTiled.hpp" />
 		<Unit filename="../../Code/Math/Interpolation.hpp" />
 		<Unit filename="../../Code/Math/Rand.hpp" />
 		<Unit filename="../../Code/Math/Transform.hpp" />
+		<Unit filename="../../Code/MeshLoading.cpp" />
+		<Unit filename="../../Code/MeshLoading.hpp" />
 		<Unit filename="../../Code/Rendering/Camera.cpp" />
 		<Unit filename="../../Code/Rendering/Camera.hpp" />
 		<Unit filename="../../Code/Rendering/Material.hpp" />
+		<Unit filename="../../Code/Rendering/Mesh.cpp" />
 		<Unit filename="../../Code/Rendering/Mesh.hpp" />
 		<Unit filename="../../Code/Rendering/OpenGLTranslation.hpp" />
 		<Unit filename="../../Code/Rendering/Renderer.cpp" />
@@ -69,6 +76,8 @@
 		<Unit filename="../../Code/Rendering/Shader.hpp" />
 		<Unit filename="../../Code/Rendering/VertexArray.cpp" />
 		<Unit filename="../../Code/Rendering/VertexArray.hpp" />
+		<Unit filename="../../Code/ShaderWaves.cpp" />
+		<Unit filename="../../Code/ShaderWaves.hpp" />
 		<Unit filename="../../Code/Utilities/LibCompatibility.hpp" />
 		<Unit filename="../../Code/Utilities/Log.cpp" />
 		<Unit filename="../../Code/Utilities/Log.hpp" />
@@ -77,6 +86,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../Submodules/log/src/log.h" />
+		<Unit filename="../../Submodules/tinyXML/Sources/XMLFileLoader.cpp" />
+		<Unit filename="../../Submodules/tinyXML/Sources/XMLFileLoader.hpp" />
+		<Unit filename="../../Submodules/tinyXML/Sources/tinystr.cpp" />
+		<Unit filename="../../Submodules/tinyXML/Sources/tinystr.h" />
+		<Unit filename="../../Submodules/tinyXML/Sources/tinyxml.cpp" />
+		<Unit filename="../../Submodules/tinyXML/Sources/tinyxml.h" />
+		<Unit filename="../../Submodules/tinyXML/Sources/tinyxmlerror.cpp" />
+		<Unit filename="../../Submodules/tinyXML/Sources/tinyxmlparser.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

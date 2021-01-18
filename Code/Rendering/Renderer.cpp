@@ -97,8 +97,8 @@ Renderer& Renderer::smt_Get(void)
 void Renderer::mt_Begin_Draw(void)
 {
     glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
     m_GUI_Screen.clear(sf::Color::Transparent);
@@ -134,6 +134,7 @@ void Renderer::mt_End_Draw(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
     for (auto l_it = m_Terrain_Parts.begin(); l_it != m_Terrain_Parts.end(); l_it++)
     {
         VertexArray* l_VA = l_it->first;
@@ -182,7 +183,7 @@ void Renderer::mt_End_Draw(void)
 
 
     /// Material
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     for (auto l_it = m_Mesh_Material_Render_Buffer.begin(); l_it != m_Mesh_Material_Render_Buffer.end() && true; l_it++)
     {
         VertexArray* l_VA = l_it->first.first;
@@ -207,6 +208,7 @@ void Renderer::mt_End_Draw(void)
         mt_Send_To_Shader(l_Material->m_Shader, l_Material->m_Vec2);
         mt_Send_To_Shader(l_Material->m_Shader, l_Material->m_Vec3);
         mt_Send_To_Shader(l_Material->m_Shader, l_Material->m_Vec4);
+        mt_Send_To_Shader(l_Material->m_Shader, l_Material->m_Color);
 
         l_VA->mt_Bind();
 
@@ -219,10 +221,13 @@ void Renderer::mt_End_Draw(void)
     }
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+#if 0
+#warning "Seems to write into the main color buffer but is not cleared"
     sf::Shader::bind(sf::RenderStates::Default.shader);
     m_GUI_Screen.display();
     l_GUI_Sprite.setTexture(m_GUI_Screen.getTexture());
     m_Wnd->draw(l_GUI_Sprite);
+#endif // 0
 }
 
 

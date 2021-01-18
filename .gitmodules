@@ -4,3 +4,6 @@
 [submodule "Submodules/log"]
 	path = Submodules/log
 	url = https://github.com/rxi/log.c.git
+[submodule "Submodules/tinyXML"]
+	path = Submodules/tinyXML
+	url = https://github.com/Tigole/TinyXML_Boosted.git

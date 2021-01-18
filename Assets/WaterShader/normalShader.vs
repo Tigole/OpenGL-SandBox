@@ -17,6 +17,7 @@ out vec3 FragPos;
 vec4 fn_Sine_Wave(vec4 transformed_vertex)
 {
 	transformed_vertex.y += wave_amplitude * sin(wave_frequency * t + transformed_vertex.x);
+	transformed_vertex.y += wave_amplitude * cos(wave_frequency * t + transformed_vertex.y);
 	
 	return transformed_vertex;
 }

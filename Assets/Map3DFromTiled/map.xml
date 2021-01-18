@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<3dmap xyz="1 1 1">
+	<cell xyz="0 0 0" top="9" bottom="9" edges="34" north="11"/>
+</3dmap>
+<!--
+<3dmap xyz="3 2 3">
+	<cell xyz="0 0 0" top="1"/>
+	<cell xyz="1 0 0" top="1"/>
+	<cell xyz="2 0 0" top="1"/>
+	<cell xyz="0 0 1" top="1"/>
+	<cell xyz="0 0 2" top="1"/>
+	<cell xyz="1 0 1" top="26"/>
+	<cell xyz="1 0 2" top="1"/>
+	<cell xyz="2 0 1" top="1"/>
+	<cell xyz="2 0 2" top="1"/>
+</3dmap>
+-->
