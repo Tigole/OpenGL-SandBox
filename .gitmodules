@@ -7,3 +7,9 @@
 [submodule "Submodules/tinyXML"]
 	path = Submodules/tinyXML
 	url = https://github.com/Tigole/TinyXML_Boosted.git
+[submodule "Submodules/voronoi"]
+	path = Submodules/voronoi
+	url = https://github.com/JCash/voronoi.git
+[submodule "Submodules/swarm"]
+	path = Submodules/swarm
+	url = https://github.com/johnBuffer/Swarm.git

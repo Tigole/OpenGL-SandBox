@@ -4,13 +4,13 @@
 	<Project>
 		<Option title="OpenGL-SandBox" />
 		<Option pch_mode="2" />
-		<Option compiler="gcc" />
+		<Option compiler="msys2" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/OpenGL-SandBox" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
-				<Option compiler="gcc" />
+				<Option compiler="msys2" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -19,7 +19,7 @@
 				<Option output="bin/Release/OpenGL-SandBox" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
-				<Option compiler="gcc" />
+				<Option compiler="msys2" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -51,19 +51,51 @@
 			<Add library="sfml-system" />
 			<Add library="sfml-window" />
 			<Add library="glew32" />
+			<Add library="sfml-audio" />
 			<Add directory="../../../SFML_Fork/Build/lib" />
 			<Add directory="../../Submodules/glew/glew-2.1.0/lib/Release/x64" />
 			<Add directory="../../Submodules/glew/glew-2.1.0/bin/Release/x64" />
 		</Linker>
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/alglibinternal.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/alglibinternal.h" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/alglibmisc.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/alglibmisc.h" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/ap.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/ap.h" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/dataanalysis.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/dataanalysis.h" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/diffequations.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/diffequations.h" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/fasttransforms.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/fasttransforms.h" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/integration.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/integration.h" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/interpolation.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/interpolation.h" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/linalg.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/linalg.h" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/optimization.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/optimization.h" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/solvers.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/solvers.h" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/specialfunctions.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/specialfunctions.h" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/statistics.cpp" />
+		<Unit filename="../../../../01-Code/00-Libraries/16-alglib/cpp/src/statistics.h" />
+		<Unit filename="../../Code/AntColony.hpp" />
+		<Unit filename="../../Code/CatmullSpline.cpp" />
+		<Unit filename="../../Code/CatmullSpline.hpp" />
 		<Unit filename="../../Code/CollisionTest.cpp" />
 		<Unit filename="../../Code/CollisionTest.hpp" />
 		<Unit filename="../../Code/Map3DFromTiled.cpp" />
 		<Unit filename="../../Code/Map3DFromTiled.hpp" />
 		<Unit filename="../../Code/Math/Interpolation.hpp" />
+		<Unit filename="../../Code/Math/Noise.hpp" />
 		<Unit filename="../../Code/Math/Rand.hpp" />
 		<Unit filename="../../Code/Math/Transform.hpp" />
 		<Unit filename="../../Code/MeshLoading.cpp" />
 		<Unit filename="../../Code/MeshLoading.hpp" />
+		<Unit filename="../../Code/ParticleSystem.hpp" />
 		<Unit filename="../../Code/Rendering/Camera.cpp" />
 		<Unit filename="../../Code/Rendering/Camera.hpp" />
 		<Unit filename="../../Code/Rendering/Material.hpp" />
@@ -72,20 +104,35 @@
 		<Unit filename="../../Code/Rendering/OpenGLTranslation.hpp" />
 		<Unit filename="../../Code/Rendering/Renderer.cpp" />
 		<Unit filename="../../Code/Rendering/Renderer.hpp" />
+		<Unit filename="../../Code/Rendering/SFML_Specific/SFML_2D_Renderer.cpp" />
+		<Unit filename="../../Code/Rendering/SFML_Specific/SFML_2D_Renderer.hpp" />
 		<Unit filename="../../Code/Rendering/Shader.cpp" />
 		<Unit filename="../../Code/Rendering/Shader.hpp" />
 		<Unit filename="../../Code/Rendering/VertexArray.cpp" />
 		<Unit filename="../../Code/Rendering/VertexArray.hpp" />
 		<Unit filename="../../Code/ShaderWaves.cpp" />
 		<Unit filename="../../Code/ShaderWaves.hpp" />
+		<Unit filename="../../Code/Skeleton.cpp" />
+		<Unit filename="../../Code/Skeleton.hpp" />
+		<Unit filename="../../Code/SoundeRecord.hpp" />
+		<Unit filename="../../Code/TerrainElevator.cpp" />
+		<Unit filename="../../Code/TerrainElevator.hpp" />
+		<Unit filename="../../Code/TerrainPreparator.cpp" />
+		<Unit filename="../../Code/TerrainPreparator.hpp" />
+		<Unit filename="../../Code/Utilities/Array2D.hpp" />
 		<Unit filename="../../Code/Utilities/LibCompatibility.hpp" />
 		<Unit filename="../../Code/Utilities/Log.cpp" />
 		<Unit filename="../../Code/Utilities/Log.hpp" />
+		<Unit filename="../../Code/WorldGenerator.cpp" />
+		<Unit filename="../../Code/WorldGenerator.hpp" />
+		<Unit filename="../../Code/_Prototype.cpp" />
+		<Unit filename="../../Code/_Prototype.hpp" />
 		<Unit filename="../../Code/main.cpp" />
 		<Unit filename="../../Submodules/log/src/log.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../Submodules/log/src/log.h" />
+		<Unit filename="../../Submodules/swarm/include/swarm.hpp" />
 		<Unit filename="../../Submodules/tinyXML/Sources/XMLFileLoader.cpp" />
 		<Unit filename="../../Submodules/tinyXML/Sources/XMLFileLoader.hpp" />
 		<Unit filename="../../Submodules/tinyXML/Sources/tinystr.cpp" />
@@ -94,6 +141,8 @@
 		<Unit filename="../../Submodules/tinyXML/Sources/tinyxml.h" />
 		<Unit filename="../../Submodules/tinyXML/Sources/tinyxmlerror.cpp" />
 		<Unit filename="../../Submodules/tinyXML/Sources/tinyxmlparser.cpp" />
+		<Unit filename="../../Submodules/voronoi/src/jc_voronoi.h" />
+		<Unit filename="../../Submodules/voronoi/src/jc_voronoi_clip.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

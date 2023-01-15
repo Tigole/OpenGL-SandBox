@@ -50,6 +50,7 @@ void fn_MeshLoading(sf::RenderWindow& l_Wnd,
     //l_Object_File = "../../Assets/MeshLoading/Plane.obj";
     //l_Object_File = "../../Assets/MeshLoading/Cubetextured.obj";
     //l_Object_File = "../../Assets/MeshLoading/Low-Poly_Models.obj";
+    l_Object_File = "../../Assets/TerrainPreparator/untitled2.obj";
     std::cout << "loading: " << fn_Load_Mesh(l_Object_File, l_Mesh_Pool);
 
     l_Mesh = l_Mesh_Pool.begin()->second.get();

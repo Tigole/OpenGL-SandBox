@@ -6,47 +6,12 @@
 
 #include "Rendering/Material.hpp"
 #include "Utilities/Log.hpp"
+#include "Utilities/Array2D.hpp"
 
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
 
-
-template<typename T>
-struct Array2D
-{
-    Array2D(int w, int h)
-    {
-        m_Buffer = new T[w * h];
-        m_Width = w;
-        m_Height = h;
-    }
-
-    ~Array2D()
-    {
-        delete [] m_Buffer;
-    }
-
-    T& operator()(int x, int y)
-    {
-        return m_Buffer[y * m_Width + x];
-    }
-
-    int mt_Get_Width(void) const
-    {
-        return m_Width;
-    }
-
-    int mt_Get_Height(void) const
-    {
-        return m_Height;
-    }
-
-private:
-    T* m_Buffer;
-    int m_Width;
-    int m_Height;
-};
 
 
 
@@ -228,9 +193,9 @@ void ReferenceMesh_FromFile::mt_Load(const char* file_name)
     TiXmlDocument l_Document;
     std::map<int, std::unique_ptr<Array2D<int>>> l_Map_Descripion;
 
-    toto(file_name);
+    //toto(file_name);
 
-    return;
+    //return;
 
     if (l_Document.LoadFile(file_name))
     {
