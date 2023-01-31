@@ -41,134 +41,37 @@ void WorldGenerator::mt_Handle_Event(const sf::Event& event)
 
 void WorldGenerator::mt_Update(float elapsed_time)
 {
-    float l_Threshold = 0.001f;
+    float l_Threshold = 0.1f;
 
     while (m_Accumulated_Time >= l_Threshold)
     {
         m_Accumulated_Time -= l_Threshold;
-
-        if (m_Shuffled_Remaining_Site_Indices.size() > 0)
-        {
-            world_gen::Cell l_Cell;
-            const jcv_graphedge* l_Edge;
-
-            l_Cell.m_Site_Id = m_Shuffled_Remaining_Site_Indices.back();
-
-            l_Edge = jcv_diagram_get_sites(&m_Diagram)[m_Shuffled_Remaining_Site_Indices.back()].edges;
-            l_Cell.m_Point_Count = 0;
-            while (l_Edge != nullptr)
-            {
-                l_Cell.m_Point_Count++;
-                l_Edge = l_Edge->next;
-            }
-
-            l_Cell.m_Color = sf::Color::White;
-            l_Cell.m_Region_Id = -1;
-
-            m_Cells.push_back(l_Cell);
-
-            std::cout << "Added cell " << l_Cell.m_Site_Id << '\n';
-
-            m_Shuffled_Remaining_Site_Indices.pop_back();
-        }
-        else if (m_Region_Count > 0)
-        {
-            while(m_Region_Count >= 0)
-            {
-                world_gen::Region l_Region;
-
-                l_Region.m_Region_Id = m_Region_Count;
-                l_Region.m_Cell_Ids.push_back(m_Region_Count);
-
-                m_Cells[m_Region_Count].m_Color = sf::Color::Blue;
-                m_Cells[m_Region_Count].m_Region_Id = m_Region_Count;
-                m_Cells[m_Region_Count].m_Altitude = RandomGenerator::smt_Get()(500) - 250;
-
-                m_Regions.push_back(l_Region);
-
-                m_Region_Count--;
-            }
-        }
-        else
-        {
-            //
-        }
     }
 }
 
 void WorldGenerator::mt_Draw(sf::RenderTarget& target)
 {
-    const jcv_site* l_Sites;
-    const jcv_graphedge* l_Edge;
-    sf::ConvexShape l_Shape;
-
-    Renderer2D::smt_Render_Texture(target, m_RenderTexture.getTexture(), Renderer2D::TextureMode::None);
-
-    l_Sites = jcv_diagram_get_sites(&m_Diagram);
-
-    for (std::size_t ii = 0; ii < m_Cells.size(); ii++)
-    {
-        int l_Current_Point = 0;
-
-        l_Shape.setPointCount(m_Cells[ii].m_Point_Count);
-        l_Shape.setFillColor(m_Cells[ii].m_Color);
-        l_Shape.setOutlineThickness(1.0f);
-        l_Shape.setOutlineColor(sf::Color::Black);
-
-        l_Edge = l_Sites[m_Cells[ii].m_Site_Id].edges;
-
-        while(l_Edge != nullptr)
-        {
-            l_Shape.setPoint(l_Current_Point, sf::Vector2f(l_Edge->pos[0].x, l_Edge->pos[0].y));
-
-            l_Current_Point++;
-
-            l_Edge = l_Edge->next;
-        }
-
-        target.draw(l_Shape);
-    }
-
-    for (std::size_t ii = 0; ii < m_Regions.size(); ii++)
-    {
-        //
-    }
-
-    Renderer2D::smt_Render_Text(target, "azerty", sf::Vector2f(0, 0), 32, sf::Color::Black);
+    Renderer2D::smt_Render_Texture(target, m_Texture, Renderer2D::TextureMode::None);
 }
-
 
 void WorldGenerator::mt_Generate_Diagram()
 {
-    const int l_Point_Count = 5000;
     const int l_Pixel_Count = 500;
-    jcv_rect l_Bounding_Box = {{0.0f, 0.0f}, {2.0f, 2.0f}};
-    jcv_point l_Points[l_Point_Count];
+    jcv_rect l_Bounding_Box = {{0.0f, 0.0f}, {1.0f, 1.0f}};
+    std::vector<jcv_point> l_Points;
     const jcv_site* l_Sites;
     jcv_graphedge* l_Graph_Edge;
-
-    m_Region_Count = (l_Point_Count * 1) / 100;
 
     l_Bounding_Box.max.x *= l_Pixel_Count;
     l_Bounding_Box.max.y *= l_Pixel_Count;
 
-    m_RenderTexture.create(l_Bounding_Box.max.x, l_Bounding_Box.max.y, false);
+    mt_Generate_Points_Position_Default(l_Points, l_Bounding_Box);
+    //mt_Generate_Points_Position_Center_Density(l_Points, l_Bounding_Box);
 
-    m_Shuffled_Remaining_Site_Indices.resize(l_Point_Count);
-    std::cout << "Points count: " << l_Point_Count;
-    for (int ii = 0; ii < l_Point_Count; ii++)
-    {
-        l_Points[ii].x = RandomGenerator::smt_Get()(l_Bounding_Box.min.x, l_Bounding_Box.max.x);
-        l_Points[ii].y = RandomGenerator::smt_Get()(l_Bounding_Box.min.y, l_Bounding_Box.max.y);
+    std::cout << "Points count: " << l_Points.size();
+    mt_Resize_Cells_Container(l_Bounding_Box);
 
-        m_Shuffled_Remaining_Site_Indices[ii] = ii;
-
-        //std::cout << "\n[ " << ii << " ] : " << l_Points[ii].x << ' ' << l_Points[ii].y;
-    }
-
-    jcv_diagram_generate(l_Point_Count, l_Points, &l_Bounding_Box, nullptr, &m_Diagram);
-
-    m_RenderTexture.clear();
+    jcv_diagram_generate(l_Points.size(), l_Points.data(), &l_Bounding_Box, nullptr, &m_Diagram);
 
     std::cout << "\nSite count: " << m_Diagram.numsites;
     l_Sites = jcv_diagram_get_sites(&m_Diagram);
@@ -178,40 +81,242 @@ void WorldGenerator::mt_Generate_Diagram()
 
         while(l_Graph_Edge != nullptr)
         {
+            auto l_fn_Fix_Point = [&](jcv_point& p)
+            {
+                p.x = std::max(p.x, 0.0f);
+                p.x = std::min(p.x, l_Bounding_Box.max.x - 1.0f);
+                p.y = std::max(p.y, 0.0f);
+                p.y = std::min(p.y, l_Bounding_Box.max.y - 1.0f);
+            };
+            std::vector<sf::Vector2f> l_Line;
+
             //std::cout << "\n[ " << l_Graph_Edge->pos[0].x << ' ' << l_Graph_Edge->pos[0].y << " ] [ " << l_Graph_Edge->pos[1].x << ' ' << l_Graph_Edge->pos[1].y << " ]";
 
-            Renderer2D::smt_Render_Line(m_RenderTexture,
-                                        sf::Vector2f(l_Graph_Edge->pos[0].x, l_Graph_Edge->pos[0].y),
-                                        sf::Vector2f(l_Graph_Edge->pos[1].x, l_Graph_Edge->pos[1].y),
-                                        sf::Color::Yellow);
+            l_fn_Fix_Point(l_Graph_Edge->pos[0]);
+            l_fn_Fix_Point(l_Graph_Edge->pos[1]);
+
+            mt_Get_Line(sf::Vector2f(l_Graph_Edge->pos[0].x, l_Graph_Edge->pos[0].y), sf::Vector2f(l_Graph_Edge->pos[1].x, l_Graph_Edge->pos[1].y), l_Line);
+
+            for (std::size_t ii = 0; ii < l_Line.size(); ii++)
+            {
+                mt_Set_Cell_Edge(l_Line[ii].x, l_Line[ii].y);
+            }
+
+            /// Draw Line (sf::Color::Yellow)
+            /*mt_Draw_Line(l_Image,
+                         sf::Vector2f(l_Graph_Edge->pos[0].x, l_Graph_Edge->pos[0].y),
+                         sf::Vector2f(l_Graph_Edge->pos[1].x, l_Graph_Edge->pos[1].y),
+                         sf::Color::Yellow);*/
 
             l_Graph_Edge = l_Graph_Edge->next;
         }
     }
     for (int ii = 0; ii < m_Diagram.numsites; ii++)
     {
-        Renderer2D::smt_Render_Point(m_RenderTexture, sf::Vector2f(l_Sites[ii].p.x, l_Sites[ii].p.y), sf::Color::Green);
+        jcv_point l_Relaxed_Point = l_Sites[ii].p;
+        int l_Edge_Count = 1;
+
+        //l_Image.setPixel(l_Sites[ii].p.x, l_Sites[ii].p.y, sf::Color::Blue);
+        mt_Set_Cell_PrimaryPoint(l_Sites[ii].p.x, l_Sites[ii].p.y);
 
         l_Graph_Edge = l_Sites[ii].edges;
 
         while(l_Graph_Edge != nullptr)
         {
-            Renderer2D::smt_Render_Point(m_RenderTexture, sf::Vector2f(l_Graph_Edge->pos[0].x, l_Graph_Edge->pos[0].y), sf::Color::Magenta);
-            Renderer2D::smt_Render_Point(m_RenderTexture, sf::Vector2f(l_Graph_Edge->pos[1].x, l_Graph_Edge->pos[1].y), sf::Color::Magenta);
+            //l_Image.setPixel(l_Graph_Edge->pos[0].x, l_Graph_Edge->pos[0].y, sf::Color::Magenta);
+            //l_Image.setPixel(l_Graph_Edge->pos[1].x, l_Graph_Edge->pos[1].y, sf::Color::Magenta);
+
+            mt_Set_Cell_EdgeJunction(l_Graph_Edge->pos[0].x, l_Graph_Edge->pos[0].y);
+            mt_Set_Cell_EdgeJunction(l_Graph_Edge->pos[1].x, l_Graph_Edge->pos[1].y);
+
+            l_Relaxed_Point.x += l_Graph_Edge->pos[0].x;
+            l_Relaxed_Point.y += l_Graph_Edge->pos[0].y;
+
+            l_Edge_Count++;
 
             l_Graph_Edge = l_Graph_Edge->next;
         }
+
+        l_Relaxed_Point.x /= l_Edge_Count;
+        l_Relaxed_Point.y /= l_Edge_Count;
+
+        //l_Image.setPixel(l_Relaxed_Point.x, l_Relaxed_Point.y, sf::Color::Cyan);
+        mt_Set_Cell_RelaxedPoint(l_Relaxed_Point.x, l_Relaxed_Point.y);
     }
 
-    m_RenderTexture.display();
-    m_RenderTexture.getTexture().copyToImage().saveToFile("WorldGeneration.png");
-
-    /// Shuffle
-    for (std::size_t ii = m_Shuffled_Remaining_Site_Indices.size() - 1; ii > 1; ii--)
-    {
-        std::size_t jj = RandomGenerator::smt_Get()(0, static_cast<uint32_t>(ii));
-        std::swap(m_Shuffled_Remaining_Site_Indices[jj], m_Shuffled_Remaining_Site_Indices[ii]);
-    }
+    mt_Save_Image("WorldGeneration.png", l_Bounding_Box.max.x, l_Bounding_Box.max.y);
 
     std::cout << "\n\n";
+}
+
+void WorldGenerator::mt_Generate_Points_Position_Default(std::vector<jcv_point>& points, const jcv_rect& boundings)
+{
+    points.resize(2000);
+
+    for (int ii = 0; ii < points.size(); ii++)
+    {
+        points[ii].x = RandomGenerator::smt_Get()(boundings.min.x, boundings.max.x);
+        points[ii].y = RandomGenerator::smt_Get()(boundings.min.y, boundings.max.y);
+    }
+}
+
+void WorldGenerator::mt_Generate_Points_Position_Center_Density(std::vector<jcv_point>& points, const jcv_rect& boundings)
+{
+    points.resize(50);
+
+    for (int ii = 0; ii < points.size(); ii++)
+    {
+        points[ii].x = RandomGenerator::smt_Get()(boundings.min.x, boundings.max.x);
+        points[ii].y = RandomGenerator::smt_Get()(boundings.min.y, boundings.max.y);
+    }
+
+    const float dx = (boundings.max.x - boundings.min.x) / 10.0f;
+    const float dy = (boundings.max.y - boundings.min.y) / 10.0f;
+    const float centerx = (boundings.max.x - boundings.min.x) / 2.0f;
+    const float centery = (boundings.max.y - boundings.min.y) / 2.0f;
+
+    points.clear();
+    for (float xx = boundings.min.x; xx < boundings.max.x; xx += dx)
+    {
+        for (float yy = boundings.min.y; yy < boundings.max.y; yy += dy)
+        {
+            uint32_t l_Threshold = (std::abs(centerx - xx) / boundings.max.x * std::abs(centery - yy) / boundings.max.y) * 100;
+            if (RandomGenerator::smt_Get().mt_Generate(100) < l_Threshold)
+            {
+                points.push_back({xx, yy});
+            }
+        }
+    }
+}
+
+void WorldGenerator::mt_Resize_Cells_Container(const jcv_rect& boundings)
+{
+    m_Cells.resize(boundings.max.y, std::vector<world_gen::Cell>(boundings.max.x));
+}
+
+world_gen::Cell& WorldGenerator::mt_Get_Cell(int xx, int yy)
+{
+    return m_Cells[yy][xx];
+}
+
+void WorldGenerator::mt_Set_Cell(int xx, int yy, world_gen::CellType cell_type, const sf::Color& cell_color)
+{
+    world_gen::Cell& l_Cell = mt_Get_Cell(xx, yy);
+
+    l_Cell.m_Type = cell_type;
+    l_Cell.m_Color = cell_color;
+}
+
+void WorldGenerator::mt_Set_Cell_PrimaryPoint(int xx, int yy)
+{
+    mt_Set_Cell(xx, yy, world_gen::CellType::PrimaryPoint, sf::Color::Blue);
+}
+
+void WorldGenerator::mt_Set_Cell_RelaxedPoint(int xx, int yy)
+{
+    mt_Set_Cell(xx, yy, world_gen::CellType::RelaxedPoint, sf::Color::Cyan);
+}
+
+void WorldGenerator::mt_Set_Cell_Edge(int xx, int yy)
+{
+    mt_Set_Cell(xx, yy, world_gen::CellType::Edge, sf::Color::Yellow);
+}
+
+void WorldGenerator::mt_Set_Cell_EdgeJunction(int xx, int yy)
+{
+    mt_Set_Cell(xx, yy, world_gen::CellType::EdgeJunction, sf::Color::Magenta);
+}
+
+void WorldGenerator::mt_Set_Cell_SiteContent(int xx, int yy)
+{
+    mt_Set_Cell(xx, yy, world_gen::CellType::SiteContent, sf::Color::Black);
+}
+
+
+void WorldGenerator::mt_Get_Line(const sf::Vector2f& start, const sf::Vector2f& end, std::vector<sf::Vector2f>& line)
+{
+    const float dx = (end.x - start.x);
+    const float dy = (end.y - start.y);
+    float min, max;
+    float l_Slope;
+
+    line.clear();
+
+    if ((dx == 0.0f) && (dy == 0.0f))
+    {
+        line.push_back(start);
+        return;
+    }
+
+    if (std::fabs(dx) > std::fabs(dy))
+    {
+        if (start.x < end.x)
+        {
+            min = start.x;
+            max = end.x;
+        }
+        else
+        {
+            min = end.x;
+            max = start.x;
+        }
+
+        l_Slope = dy / dx;
+
+        for (float xx = min; xx < max; xx += 1.0f)
+        {
+            float yy = start.y + ((xx - start.x) * l_Slope);
+            line.push_back(sf::Vector2f(xx, yy));
+        }
+    }
+    else
+    {
+        if (start.y < end.y)
+        {
+            min = start.y;
+            max = end.y;
+        }
+        else
+        {
+            min = end.y;
+            max = start.y;
+        }
+
+        l_Slope = dx / dy;
+
+        for (float yy = min; yy < max; yy += 1.0f)
+        {
+            float xx = start.x + ((yy - start.y) * l_Slope);
+            line.push_back(sf::Vector2f(xx, yy));
+        }
+    }
+}
+
+void WorldGenerator::mt_Save_Image(const char* file_name, int width, int height)
+{
+    sf::Image l_Image;
+
+    l_Image.create(width, height, sf::Color::Black);
+
+    for (int yy = 0; yy < height; yy++)
+    {
+        for (int xx = 0; xx < width; xx++)
+        {
+            l_Image.setPixel(xx, yy, mt_Get_Cell(xx, yy).m_Color);
+        }
+    }
+
+    l_Image.saveToFile(file_name);
+}
+
+void WorldGenerator::mt_Draw_Line(sf::Image& image, const sf::Vector2f& start, const sf::Vector2f& end, const sf::Color& color)
+{
+    std::vector<sf::Vector2f> l_Line;
+
+    mt_Get_Line(start, end, l_Line);
+
+    for (std::size_t ii = 0; ii < l_Line.size(); ii++)
+    {
+        image.setPixel(l_Line[ii].x, l_Line[ii].y, color);
+    }
 }

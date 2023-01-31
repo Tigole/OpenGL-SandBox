@@ -10,21 +10,20 @@
 namespace world_gen
 {
 
-struct Cell
+enum class CellType
 {
-    int m_Site_Id;
-
-    int m_Point_Count;
-
-    sf::Color m_Color;
-    int m_Region_Id;
-    int m_Altitude;
+    PrimaryPoint,
+    RelaxedPoint,
+    Edge,
+    EdgeJunction,
+    SiteContent
 };
 
-struct Region
+struct Cell
 {
-    int m_Region_Id;
-    std::vector<int> m_Cell_Ids;
+    CellType m_Type = CellType::SiteContent;
+    //int m_Site_Id = -1;
+    sf::Color m_Color = sf::Color::Black;
 };
 
 
@@ -47,13 +46,27 @@ private:
 
     void mt_Generate_Diagram();
 
-    jcv_diagram m_Diagram;
-    std::vector<int> m_Shuffled_Remaining_Site_Indices;
-    sf::RenderTexture m_RenderTexture;
+    void mt_Generate_Points_Position_Default(std::vector<jcv_point>& points, const jcv_rect& boundings);
+    void mt_Generate_Points_Position_Center_Density(std::vector<jcv_point>& points, const jcv_rect& boundings);
 
-    std::vector<world_gen::Cell> m_Cells;
-    std::vector<world_gen::Region> m_Regions;
-    int m_Region_Count;
+    jcv_diagram m_Diagram;
+    std::vector<std::vector<world_gen::Cell>> m_Cells;
+    void mt_Resize_Cells_Container(const jcv_rect& boundings);
+    world_gen::Cell& mt_Get_Cell(int xx, int yy);
+
+    void mt_Set_Cell(int xx, int yy, world_gen::CellType cell_type, const sf::Color& cell_color);
+    void mt_Set_Cell_PrimaryPoint(int xx, int yy);
+    void mt_Set_Cell_RelaxedPoint(int xx, int yy);
+    void mt_Set_Cell_Edge(int xx, int yy);
+    void mt_Set_Cell_EdgeJunction(int xx, int yy);
+    void mt_Set_Cell_SiteContent(int xx, int yy);
+
+    void mt_Get_Line(const sf::Vector2f& start, const sf::Vector2f& end, std::vector<sf::Vector2f>& line);
+
+    void mt_Save_Image(const char* file_name, int width, int height);
+    void mt_Draw_Line(sf::Image& image, const sf::Vector2f& start, const sf::Vector2f& end, const sf::Color& color);
+
+    sf::Texture m_Texture;
 };
 
 
