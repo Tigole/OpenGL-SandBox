@@ -41,6 +41,7 @@
 			<Add directory="../../Submodules/glew/glew-2.1.0/include" />
 			<Add directory="../../Code" />
 			<Add directory="../../Submodules/log/src" />
+			<Add directory="../../Submodules/tinyXML/Sources" />
 		</Compiler>
 		<Linker>
 			<Add option="-m64" />

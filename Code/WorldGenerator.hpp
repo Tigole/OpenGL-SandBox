@@ -4,7 +4,7 @@
 #include "_Prototype.hpp"
 
 #include "../Submodules/voronoi/src/jc_voronoi.h"
-
+#include "Utilities/Array2D.hpp"
 
 
 namespace world_gen
@@ -22,8 +22,33 @@ enum class CellType
 struct Cell
 {
     CellType m_Type = CellType::SiteContent;
-    //int m_Site_Id = -1;
     sf::Color m_Color = sf::Color::Black;
+    std::vector<int> m_Site_Ids {};
+};
+
+class VoronoiMapInitializer
+{
+public:
+
+    void mt_Generate(std::vector<jcv_point>& points, const jcv_rect& boundings);
+};
+
+class VoronoiMapGenerator
+{
+public:
+
+    void mt_Generate(const sf::Vector2u& map_size, Array2D<Cell>& map_content);
+
+private:
+
+    void mt_Set_Cell(Array2D<Cell>& map_content, int xx, int yy, world_gen::CellType cell_type, const sf::Color& cell_color, int site_id);
+    void mt_Set_Cell_PrimaryPoint(Array2D<Cell>& map_content, int xx, int yy, int site_id);
+    void mt_Set_Cell_RelaxedPoint(Array2D<Cell>& map_content, int xx, int yy, int site_id);
+    void mt_Set_Cell_Edge(Array2D<Cell>& map_content, int xx, int yy, int site_id);
+    void mt_Set_Cell_EdgeJunction(Array2D<Cell>& map_content, int xx, int yy, int site_id);
+    void mt_Set_Cell_SiteContent(Array2D<Cell>& map_content, int xx, int yy, int site_id);
+
+    void mt_Get_Line(const sf::Vector2f& start, const sf::Vector2f& end, std::vector<sf::Vector2f>& line);
 };
 
 
@@ -46,25 +71,11 @@ private:
 
     void mt_Generate_Diagram();
 
-    void mt_Generate_Points_Position_Default(std::vector<jcv_point>& points, const jcv_rect& boundings);
-    void mt_Generate_Points_Position_Center_Density(std::vector<jcv_point>& points, const jcv_rect& boundings);
+    Array2D<world_gen::Cell> m_Cells;
 
-    jcv_diagram m_Diagram;
-    std::vector<std::vector<world_gen::Cell>> m_Cells;
-    void mt_Resize_Cells_Container(const jcv_rect& boundings);
-    world_gen::Cell& mt_Get_Cell(int xx, int yy);
+    void mt_Save_Image(const char* file_name);
 
-    void mt_Set_Cell(int xx, int yy, world_gen::CellType cell_type, const sf::Color& cell_color);
-    void mt_Set_Cell_PrimaryPoint(int xx, int yy);
-    void mt_Set_Cell_RelaxedPoint(int xx, int yy);
-    void mt_Set_Cell_Edge(int xx, int yy);
-    void mt_Set_Cell_EdgeJunction(int xx, int yy);
-    void mt_Set_Cell_SiteContent(int xx, int yy);
-
-    void mt_Get_Line(const sf::Vector2f& start, const sf::Vector2f& end, std::vector<sf::Vector2f>& line);
-
-    void mt_Save_Image(const char* file_name, int width, int height);
-    void mt_Draw_Line(sf::Image& image, const sf::Vector2f& start, const sf::Vector2f& end, const sf::Color& color);
+    void mt_Water_Test(void);
 
     sf::Texture m_Texture;
 };

@@ -5,6 +5,7 @@
 template<typename T>
 struct Array2D
 {
+    Array2D() {}
     Array2D(int w, int h) : m_Buffer(nullptr), m_Width(0), m_Height(0)
     {
         mt_Resize(w, h);
@@ -53,9 +54,9 @@ private:
         }
     }
 
-    T* m_Buffer;
-    int m_Width;
-    int m_Height;
+    T* m_Buffer = nullptr;
+    int m_Width = 0;
+    int m_Height = 0;
 };
 
 
