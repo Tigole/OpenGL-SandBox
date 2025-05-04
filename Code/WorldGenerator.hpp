@@ -55,6 +55,30 @@ private:
 }
 
 
+
+
+
+
+enum class CityCellType
+{
+    None,
+    Road,
+    Wall,
+    HouseFloor,
+};
+
+struct CityCell
+{
+    CityCellType m_Type = CityCellType::None;
+};
+
+void fn_City_Test(const Array2D<world_gen::Cell>& source, Array2D<CityCell>& dest);
+void fn_City_Test_Make_Roads(const Array2D<world_gen::Cell>& source, Array2D<CityCell>& dest);
+void fn_City_Test_Make_Walls(const Array2D<world_gen::Cell>& source, Array2D<CityCell>& dest);
+void fn_City_Test_Make_Houses(const Array2D<world_gen::Cell>& source, Array2D<CityCell>& dest);
+
+
+
 class WorldGenerator : public Prototype
 {
 public:
@@ -74,6 +98,8 @@ private:
     Array2D<world_gen::Cell> m_Cells;
 
     void mt_Save_Image(const char* file_name);
+
+    void mt_City_Test(Array2D<world_gen::Cell>& cells);
 
     void mt_Water_Test(void);
 

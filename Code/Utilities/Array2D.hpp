@@ -21,6 +21,11 @@ struct Array2D
         return m_Buffer[y * m_Width + x];
     }
 
+    const T& operator()(int x, int y) const
+    {
+        return m_Buffer[y * m_Width + x];
+    }
+
     int mt_Get_Width(void) const
     {
         return m_Width;

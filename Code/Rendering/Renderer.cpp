@@ -106,6 +106,7 @@ void Renderer::mt_Begin_Draw(void)
 
 void Renderer::mt_End_Draw(void)
 {
+    constexpr const int l_Polygon_Mode = GL_FILL;
     sf::Sprite l_GUI_Sprite;
 
     m_Wnd->setActive(true);
@@ -159,7 +160,7 @@ void Renderer::mt_End_Draw(void)
     /// Entities
     m_Shader.mt_Use();
     m_Shader.mt_Set_Uniform("uCameraMatrix", m_Camera.mt_Get_ViewProjection_Matrix());
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, l_Polygon_Mode);
     for (auto l_it = m_Mesh_Render_Buffer.begin(); l_it != m_Mesh_Render_Buffer.end() && true; l_it++)
     {
         VertexArray* l_VA = l_it->first.first;
@@ -183,7 +184,7 @@ void Renderer::mt_End_Draw(void)
 
 
     /// Material
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, l_Polygon_Mode);
     for (auto l_it = m_Mesh_Material_Render_Buffer.begin(); l_it != m_Mesh_Material_Render_Buffer.end() && true; l_it++)
     {
         VertexArray* l_VA = l_it->first.first;

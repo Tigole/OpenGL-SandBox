@@ -42,10 +42,10 @@ void fn_SandBox(int argc, char** argv)
     sf::Clock l_Clk;
     sf::Context l_Context(sf::ContextSettings(24, 0, 8, 4, 6), 10, 10);
 
-    //fn_Shader_Waves(l_Wnd, l_Event, l_Camera, l_Elapsed_Time, l_Accumulated_Time, l_Clk);
+    fn_Shader_Waves(l_Wnd, l_Event, l_Camera, l_Elapsed_Time, l_Accumulated_Time, l_Clk);
     //fn_Collision_Test(l_Wnd, l_Event, l_Camera, l_Elapsed_Time, l_Accumulated_Time, l_Clk);
     //fn_Map3D(l_Wnd, l_Event, l_Camera, l_Elapsed_Time, l_Accumulated_Time, l_Clk);
-    //fn_MeshLoading(l_Wnd, l_Event, l_Camera, l_Elapsed_Time, l_Accumulated_Time, l_Clk, l_Context);
+    fn_MeshLoading(l_Wnd, l_Event, l_Camera, l_Elapsed_Time, l_Accumulated_Time, l_Clk, l_Context);
     //fn_CatmullSpline(l_Wnd, l_Event, l_Camera, l_Elapsed_Time, l_Accumulated_Time, l_Clk, l_Context);
     //fn_TerrainPreparator(argc, argv);
 
@@ -53,11 +53,11 @@ void fn_SandBox(int argc, char** argv)
 
 #define ADD_TO_PROTOTYPE(prototype_name, prototype_type) l_Prototypes.emplace(prototype_name, std::unique_ptr<Prototype>(new prototype_type));
 
-    ADD_TO_PROTOTYPE("WorldGenerator", WorldGenerator);
+    //ADD_TO_PROTOTYPE("WorldGenerator", WorldGenerator);
     //ADD_TO_PROTOTYPE("TerrainElevator", TerrainElevator);
     //l_Prototypes.emplace("AntColony", std::unique_ptr<Prototype>(new ant::AntColony<300, 300, 100>));
     //ADD_TO_PROTOTYPE("AntColony", ant::AntColony<5, 5, 3>);
-    ADD_TO_PROTOTYPE("ParticleSystem", ParticleSystem);
+    //ADD_TO_PROTOTYPE("ParticleSystem", ParticleSystem);
     //ADD_TO_PROTOTYPE("SoundRecord", SoundRecord);
     //ADD_TO_PROTOTYPE("2D-Skeleton", Skeleton);
 

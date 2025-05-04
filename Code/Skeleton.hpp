@@ -2,6 +2,7 @@
 #define _SKELETON_HPP 1
 
 #include "_Prototype.hpp"
+#include <memory>
 
 namespace sk
 {

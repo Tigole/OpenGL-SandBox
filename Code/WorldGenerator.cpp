@@ -19,7 +19,8 @@ namespace world_gen
 
 void VoronoiMapInitializer::mt_Generate(std::vector<jcv_point>& points, const jcv_rect& boundings)
 {
-    std::size_t l_Point_Count = 2000;
+    //const std::size_t l_Point_Count = 2000;
+    const std::size_t l_Point_Count = 300;
     jcv_point l_Point;
 
     for (int ii = 0; ii < l_Point_Count; ii++)
@@ -30,6 +31,48 @@ void VoronoiMapInitializer::mt_Generate(std::vector<jcv_point>& points, const jc
         if (std::find_if(points.begin(), points.end(), [&](const jcv_point& p) {return p.x == l_Point.x && p.y == l_Point.y;}) == points.end())
         {
             points.push_back(l_Point);
+        }
+    }
+
+    points.clear();
+
+    for (int yy = 0; yy < boundings.max.y; yy++)
+    {
+        for (int xx = 0; xx < boundings.max.x; xx++)
+        {
+            const float l_Diff_X = (boundings.max.x * 0.5f - xx) / (boundings.max.x * 0.5f);
+            const float l_Diff_Y = (boundings.max.y * 0.5f - yy) / (boundings.max.y * 0.5f);
+            const float l_Distance_To_Center = sqrt(l_Diff_X * l_Diff_X + l_Diff_Y * l_Diff_Y);
+            const float l_Threshold = 0.003f * exp(-2.0f * l_Distance_To_Center * l_Distance_To_Center);
+            const float l_Rand = RandomGenerator::smt_Get().mt_Generate(0.0f, 1.0f);
+
+            /// 0.0005f
+
+            if ((l_Rand < l_Threshold) && (points.size() < l_Point_Count))
+            {
+                points.push_back(jcv_point{xx, yy});
+            }
+        }
+    }
+
+    points.clear();
+
+    for (int ii = 0; ii < l_Point_Count; /*ii++*/)
+    {
+        const float xx = RandomGenerator::smt_Get()(boundings.min.x, boundings.max.x);
+        const float yy = RandomGenerator::smt_Get()(boundings.min.y, boundings.max.y);
+        const float l_Diff_X = (boundings.max.x * 0.5f - xx) / (boundings.max.x * 0.5f);
+        const float l_Diff_Y = (boundings.max.y * 0.5f - yy) / (boundings.max.y * 0.5f);
+        const float l_Distance_To_Center = sqrt(l_Diff_X * l_Diff_X + l_Diff_Y * l_Diff_Y);
+        const float l_Threshold = 0.1f * exp(-2.0f * l_Distance_To_Center * l_Distance_To_Center);
+        const float l_Rand = RandomGenerator::smt_Get().mt_Generate(0.0f, 1.0f);
+        const bool l_Record =       (std::find_if(points.begin(), points.end(), [&](const jcv_point& p) {return p.x == xx && p.y == yy;}) == points.end())
+                              &&    (l_Rand < l_Threshold);
+
+        if (l_Record == true)
+        {
+            points.push_back(jcv_point{xx, yy});
+            ii++;
         }
     }
 }
@@ -219,6 +262,143 @@ void VoronoiMapGenerator::mt_Get_Line(const sf::Vector2f& start, const sf::Vecto
 }
 
 
+
+
+void fn_City_Test(const Array2D<world_gen::Cell>& source, Array2D<CityCell>& dest)
+{
+    fn_City_Test_Make_Roads(source, dest);
+    fn_City_Test_Make_Walls(source, dest);
+    fn_City_Test_Make_Houses(source, dest);
+}
+
+
+void fn_City_Test_Make_Roads(const Array2D<world_gen::Cell>& source, Array2D<CityCell>& dest)
+{
+    auto l_fn_Is_Edge = [](const world_gen::Cell& cell)
+    {
+        return cell.m_Type == world_gen::CellType::Edge || cell.m_Type == world_gen::CellType::EdgeJunction;
+    };
+
+    for (int yy = 1; yy < source.mt_Get_Height() - 1; yy++)
+    {
+        for (int xx = 1; xx < source.mt_Get_Width() - 1; xx++)
+        {
+            const world_gen::Cell& l_North = source(xx, yy - 1);
+            const world_gen::Cell& l_South = source(xx, yy + 1);
+            const world_gen::Cell& l_West = source(xx - 1, yy);
+            const world_gen::Cell& l_East = source(xx + 1, yy);
+            const world_gen::Cell& l_Here = source(xx, yy);
+            CityCell& l_Current_Cell = dest(xx, yy);
+
+            if (l_Current_Cell.m_Type == CityCellType::None)
+            {
+                if (l_fn_Is_Edge(l_Here) || l_fn_Is_Edge(l_North) || l_fn_Is_Edge(l_South) || l_fn_Is_Edge(l_West) || l_fn_Is_Edge(l_East))
+                {
+                    l_Current_Cell.m_Type = CityCellType::Road;
+                }
+            }
+        }
+    }
+}
+
+void fn_City_Test_Make_Walls(const Array2D<world_gen::Cell>& source, Array2D<CityCell>& dest)
+{
+    auto l_fn_Is_Road = [](const CityCell& cell)
+    {
+        return cell.m_Type == CityCellType::Road;
+    };
+    auto l_fn_Is_Not_None = [](const CityCell& cell)
+    {
+        return cell.m_Type != CityCellType::None;
+    };
+
+    for (int yy = 1; yy < source.mt_Get_Height() - 1; yy++)
+    {
+        for (int xx = 1; xx < source.mt_Get_Width() - 1; xx++)
+        {
+            const CityCell& l_North = dest(xx, yy - 1);
+            const CityCell& l_South = dest(xx, yy + 1);
+            const CityCell& l_West = dest(xx - 1, yy);
+            const CityCell& l_East = dest(xx + 1, yy);
+            CityCell& l_Current_Cell = dest(xx, yy);
+
+            if (l_Current_Cell.m_Type == CityCellType::None)
+            {
+                if (l_fn_Is_Road(l_North) || l_fn_Is_Road(l_South) || l_fn_Is_Road(l_West) || l_fn_Is_Road(l_East))
+                {
+                    l_Current_Cell.m_Type = CityCellType::Wall;
+                }
+            }
+        }
+    }
+
+    for (int yy = 1; yy < source.mt_Get_Height() - 1; yy++)
+    {
+        for (int xx = 1; xx < source.mt_Get_Width() - 1; xx++)
+        {
+            const CityCell& l_NW = dest(xx - 1, yy - 1);
+            const CityCell& l_NE = dest(xx + 1, yy - 1);
+            const CityCell& l_SW = dest(xx - 1, yy + 1);
+            const CityCell& l_SE = dest(xx + 1, yy + 1);
+            CityCell& l_Current_Cell = dest(xx, yy);
+
+            if (l_Current_Cell.m_Type == CityCellType::None)
+            {
+                if (l_fn_Is_Road(l_NW) || l_fn_Is_Road(l_NE) || l_fn_Is_Road(l_SW) || l_fn_Is_Road(l_SE))
+                {
+                    l_Current_Cell.m_Type = CityCellType::Wall;
+                }
+            }
+        }
+    }
+
+    for (int yy = 1; yy < source.mt_Get_Height() - 1; yy++)
+    {
+        for (int xx = 1; xx < source.mt_Get_Width() - 1; xx++)
+        {
+            const CityCell& l_North = dest(xx, yy - 1);
+            const CityCell& l_South = dest(xx, yy + 1);
+            const CityCell& l_West = dest(xx - 1, yy);
+            const CityCell& l_East = dest(xx + 1, yy);
+            const CityCell& l_NW = dest(xx - 1, yy - 1);
+            const CityCell& l_NE = dest(xx + 1, yy - 1);
+            const CityCell& l_SW = dest(xx - 1, yy + 1);
+            const CityCell& l_SE = dest(xx + 1, yy + 1);
+            CityCell& l_Current_Cell = dest(xx, yy);
+
+            if (l_Current_Cell.m_Type == CityCellType::Wall)
+            {
+                if (    l_fn_Is_Not_None(l_NW) && l_fn_Is_Not_None(l_NE) && l_fn_Is_Not_None(l_SW) && l_fn_Is_Not_None(l_SE)
+                    &&  l_fn_Is_Not_None(l_North) && l_fn_Is_Not_None(l_South) && l_fn_Is_Not_None(l_West) && l_fn_Is_Not_None(l_East))
+                {
+                    l_Current_Cell.m_Type = CityCellType::Road;
+                }
+            }
+        }
+    }
+}
+
+void fn_City_Test_Make_Houses(const Array2D<world_gen::Cell>& source, Array2D<CityCell>& dest)
+{
+    for (int yy = 1; yy < source.mt_Get_Height() - 1; yy++)
+    {
+        for (int xx = 1; xx < source.mt_Get_Width() - 1; xx++)
+        {
+            CityCell& l_Current_Cell = dest(xx, yy);
+
+            if (l_Current_Cell.m_Type == CityCellType::None)
+            {
+                l_Current_Cell.m_Type = CityCellType::HouseFloor;
+            }
+        }
+    }
+}
+
+
+
+
+
+
 WorldGenerator::WorldGenerator() : Prototype("World Generator")
 {}
 
@@ -258,10 +438,12 @@ void WorldGenerator::mt_Generate_Diagram()
     world_gen::VoronoiMapGenerator l_Generator;
 
     l_Generator.mt_Generate(sf::Vector2u(l_Pixel_Count, l_Pixel_Count), m_Cells);
-
     mt_Save_Image("WorldGeneration.png");
-
     m_Texture.loadFromFile("WorldGeneration.png");
+
+    mt_City_Test(m_Cells);
+    mt_Save_Image("WorldGenerationCity.png");
+    m_Texture.loadFromFile("WorldGenerationCity.png");
 }
 
 void WorldGenerator::mt_Save_Image(const char* file_name)
@@ -279,6 +461,33 @@ void WorldGenerator::mt_Save_Image(const char* file_name)
     }
 
     l_Image.saveToFile(file_name);
+}
+
+void WorldGenerator::mt_City_Test(Array2D<world_gen::Cell>& cells)
+{
+    Array2D<CityCell> l_City_Cells;
+
+    l_City_Cells.mt_Resize(cells.mt_Get_Width(), cells.mt_Get_Height());
+
+    fn_City_Test(cells, l_City_Cells);
+
+    for (int yy = 0; yy < l_City_Cells.mt_Get_Height(); yy++)
+    {
+        for (int xx = 0; xx < l_City_Cells.mt_Get_Width(); xx++)
+        {
+            world_gen::Cell& l_Color_Cell = cells(xx, yy);
+            const CityCell& l_City_Cell = l_City_Cells(xx, yy);
+
+            switch(l_City_Cell.m_Type)
+            {
+            case CityCellType::None:        l_Color_Cell.m_Color = sf::Color::Black; break;
+            case CityCellType::Road:        l_Color_Cell.m_Color = sf::Color::Yellow; break;
+            case CityCellType::Wall:        l_Color_Cell.m_Color = sf::Color::Blue; break;
+            case CityCellType::HouseFloor:  l_Color_Cell.m_Color = sf::Color(0, 0, 128); break;
+            default:                        l_Color_Cell.m_Color = sf::Color::Black; break;
+            }
+        }
+    }
 }
 
 void WorldGenerator::mt_Water_Test(void)
